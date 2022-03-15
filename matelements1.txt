@@ -1,0 +1,84 @@
+#water
+
+94
+
+119
+120
+121
+
+142
+
+202
+
+256
+
+280
+
+286
+
+306
+
+373
+
+450
+
+492
+
+517
+
+526
+
+534
+
+541
+
+578
+
+591
+
+601
+611
+623
+627
+632
+636
+646
+653
+673
+679
+680
+681
+685
+688
+691
+693
+694
+696
+703
+714
+715
+720
+728
+
+i=0
+for iel in elist:
+	elstring=str(iel) #"12367"
+	if i>0:
+		#ElmerGrid 2 2 dam3dsavelmer -3d -boundorder -bulktype 31 762 2 -out air
+		command="ElmerGrid 2 2 dam3dsavelmer -3d -boundorder -bulktype"+elstring+ "2 -out temp2"
+		system(command)		
+	else
+		#ElmerGrid 2 2 dam3dsavelmer -3d -boundorder -bulktype 31 762 2 -out air
+		command="ElmerGrid 2 2 dam3dsavelmer -3d -boundorder -bulktype"+elstring+ "2 -out temp1"
+		system(command)
+	
+	if i>0:
+		#merge
+		#ElmerGrid 2 2 temp1 -in temp2 -out tempfinalmesh -3d -unite -merge 1.0e-10
+	else
+		#ElmerGrid 2 2 dam3dsavelmer -3d -boundorder -bulktype 31 762 2 -out air
+		command="ElmerGrid 2 2 dam3dsavelmer -3d -boundorder -bulktype"+elstring+ "2 -out temp"
+		system(command)	
+    #ElmerGrid 2 2 dam3dsavelmer -3d -boundorder -bulktype 31 762 2 -out air
+	command="ElmerGrid 2 2 dam3dsavelmer -3d -boundorder -bulktype"+elstring+ "2 -out temp"
+	system(command)
