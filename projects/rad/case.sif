@@ -1,6 +1,6 @@
 Header
   CHECK KEYWORDS Warn
-  Mesh DB "." "sol4-m1"
+  Mesh DB "." "."
   Include Path ""
   Results Directory ""
 End
@@ -11,66 +11,61 @@ Simulation
   Coordinate Mapping(3) = 1 2 3
   Simulation Type = Transient
   Steady State Max Iterations = 1
-  Output Intervals(1) = 1
-  Timestep intervals(1) = 10
-  Timestep Sizes(1) = 0.001
+  Output Intervals = 1
   Timestepping Method = BDF
   BDF Order = 1
+  Timestep intervals = 10
+  Timestep Sizes = 0.001
   Solver Input File = case.sif
   Post File = case.vtu
 End
 
 Constants
-  Gravity(4) = 0 -1 0 9.82
-  Stefan Boltzmann = 5.670374419e-08
-  Permittivity of Vacuum = 8.85418781e-12
-  Permeability of Vacuum = 1.25663706e-6
-  Boltzmann Constant = 1.380649e-23
-  Unit Charge = 1.6021766e-19
+  Gravity(4) = 0 -1 0 206.0
+  Stefan Boltzmann = 5.67e-08
+  Permittivity of Vacuum = 8.8542e-12
+  Boltzmann Constant = 1.3807e-23
+  Unit Charge = 1.602e-19
 End
 
 Body 1
   Target Bodies(1) = 1
-  Name = "Body Property 1"
-  Equation = 1
-  Material = 1
+  Name = "Body 1"
   Body Force = 1
-  Initial condition = 1
 End
 
 Body 2
   Target Bodies(1) = 2
-  Name = "Body Property 2"
+  Name = "Body 2"
   Equation = 1
-  Material = 2
-  Body Force = 1
-  Initial condition = 2
+  Material = 1
+  Initial condition = 1
 End
 
 Body 3
   Target Bodies(1) = 3
-  Name = "Body Property 3"
+  Name = "Body 3"
   Equation = 1
-  Material = 3
-  Body Force = 1
-  Initial condition = 3
+  Material = 2
+  Initial condition = 1
 End
 
 Body 4
   Target Bodies(1) = 4
-  Name = "Body Property 4"
+  Name = "Body 4"
   Equation = 1
-  Material = 4
-  Body Force = 1
-  Initial condition = 4
+  Material = 3
+  Initial condition = 1
 End
 
 Solver 1
   Equation = Heat Equation
-  Variable = Temperature
   Procedure = "HeatSolve" "HeatSolver"
+  Variable = Temperature
   Exec Solver = Always
   Stabilize = True
+  Bubbles = False
+  Lumped Mass Matrix = False
   Optimize Bandwidth = True
   Steady State Convergence Tolerance = 1.0e-5
   Nonlinear System Convergence Tolerance = 1.0e-7
@@ -97,44 +92,27 @@ End
 
 Material 1
   Name = "Material 1"
-  Reference Pressure = 11571.0
-  Heat expansion Coefficient = 0
-  Density = 1.118e-7
-  Heat Conductivity = 1
-  Heat Capacity = 2.0668e4
-  Reference Temperature = 5799.9
+  Emissivity = 0.6
   Specific Heat Ratio = 1.66666667
+  Density = 5.4801e-12
+  Heat Conductivity = 3.3419e5
+  Heat Capacity = 2.0668e4
 End
 
 Material 2
   Name = "Material 2"
-  Reference Temperature = 38820.0
-  Heat expansion Coefficient = 0
-  Density = 6.1559e-11
-  Specific Heat Ratio = 1.6666667
+  Density = 5.4801e-12
+  Specific Heat Ratio = 1.66666667
+  Heat Conductivity = 3.3419e5
   Heat Capacity = 2.0668e4
-  Reference Pressure = 0.0331
-  Heat Conductivity = 1
+  Emissivity = 0.7
 End
 
 Material 3
   Name = "Material 3"
-  Heat Capacity = 2.0668e4
-  Specific Heat Ratio = 1.6666666667
-  Reference Temperature = 190120.0
-  Heat Conductivity = 1
-  Density = 1.1529e-11
-  Reference Pressure = 0.0304
-  Heat expansion Coefficient = 0
-End
-
-Material 4
-  Name = "Material 4"
-  Heat Conductivity = 1
-  Heat expansion Coefficient = 0
-  Specific Heat Ratio = 1.666666667
-  Reference Pressure = 0.123
-  Reference Temperature = 1620300
+  Specific Heat Ratio = 1.6666667
+  Heat Conductivity = 3.3419e5
+  Emissivity = 0.8
   Density = 5.4801e-12
   Heat Capacity = 2.0668e4
 End
@@ -146,39 +124,14 @@ End
 
 Initial Condition 1
   Name = "InitialCondition 1"
-  Temperature = 5799.9
-End
-
-Initial Condition 2
-  Name = "InitialCondition 2"
-  Temperature = 38820.0
-End
-
-Initial Condition 3
-  Name = "InitialCondition 3"
-  Temperature = 190120.0
-End
-
-Initial Condition 4
-  Name = "InitialCondition 4"
-  Temperature = 1620300.0
+  Temperature = 1620300
 End
 
 Boundary Condition 1
-  Target Boundaries(1) = 4
+  Target Boundaries(1) = 1 
   Name = "BoundaryCondition 1"
-  Emissivity = 0.6
   Radiation = Diffuse Gray
   Temperature = 5799.9
-  Heat Transfer Coefficient = 1
-   Radiation Target Body = -1
+  Radiation Boundary Open = True
+  Emissivity = 0.6
 End
-
-
-
-
-
-
-
-
-
