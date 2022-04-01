@@ -165,13 +165,13 @@ Initial Condition 4
 End
 
 Boundary Condition 1
-  Target Boundaries(1) = 4
+  Target Boundaries(1) = 2
   Name = "BoundaryCondition 1"
   Emissivity = 0.6
   Radiation = Diffuse Gray
   Temperature = 5799.9
   Heat Transfer Coefficient = 1
-   Radiation Target Body = -1
+   Radiation Target Body = 1
 End
 
 

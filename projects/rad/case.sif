@@ -14,7 +14,7 @@ Simulation
   Output Intervals = 1
   Timestepping Method = BDF
   BDF Order = 1
-  Timestep intervals = 10
+  Timestep intervals = 100
   Timestep Sizes = 0.001
   Solver Input File = case.sif
   Post File = case.vtu
@@ -22,10 +22,11 @@ End
 
 Constants
   Gravity(4) = 0 -1 0 206.0
-  Stefan Boltzmann = 5.67e-08
-  Permittivity of Vacuum = 8.8542e-12
-  Boltzmann Constant = 1.3807e-23
-  Unit Charge = 1.602e-19
+  Stefan Boltzmann = 5.670374419e-08
+  Permittivity of Vacuum = 8.85418781e-12
+  Permeability of Vacuum = 1.25663706e-6
+  Boltzmann Constant = 1.380649e-23
+  Unit Charge = 1.6021766e-19
 End
 
 Body 1
@@ -128,10 +129,11 @@ Initial Condition 1
 End
 
 Boundary Condition 1
-  Target Boundaries(1) = 1 
+  Target Boundaries(1) = 5 
   Name = "BoundaryCondition 1"
   Radiation = Diffuse Gray
   Temperature = 5799.9
-  Radiation Boundary Open = True
   Emissivity = 0.6
+  Heat Transfer Coefficient = 1
+   Radiation Target Body = -1
 End
