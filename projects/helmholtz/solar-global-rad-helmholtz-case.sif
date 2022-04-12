@@ -11,28 +11,27 @@ Simulation
   Coordinate Mapping(3) = 1 2 3
   Simulation Type = Transient
   Steady State Max Iterations = 1
-  Output Intervals(1) = 1
-  Timestep intervals(1) = 10
-  Timestep Sizes(1) = 0.001
+  Output Intervals = 1
   Timestepping Method = BDF
-  BDF Order = 1
+  BDF Order = 2
+  Timestep intervals = 100
+  Timestep Sizes = 5
   Solver Input File = case.sif
   Post File = case.vtu
 End
 
 Constants
   Gravity(4) = 0 -1 0 206.0
-  Stefan Boltzmann = 5.67e-08
-  Permittivity of Vacuum = 8.8542e-12
+  Stefan Boltzmann = 5.670374419e-08
+  Permittivity of Vacuum = 8.85418781e-12
   Permeability of Vacuum = 1.25663706e-6
-  Boltzmann Constant = 1.3807e-23
-  Unit Charge = 1.602e-19
+  Boltzmann Constant = 1.380649e-23
+  Unit Charge = 1.6021766e-19
 End
 
 Body 1
   Target Bodies(1) = 1
   Name = "Body 1"
-  Equation = 2
   Body Force = 1
 End
 
@@ -41,8 +40,8 @@ Body 2
   Name = "Body 2"
   Equation = 1
   Material = 1
-  Body Force = 2
   Initial condition = 1
+  Body Force = 1
 End
 
 Body 3
@@ -61,12 +60,14 @@ Body 4
   Initial condition = 1
 End
 
-Solver 2
+Solver 1
   Equation = Heat Equation
   Procedure = "HeatSolve" "HeatSolver"
   Variable = Temperature
   Exec Solver = Always
   Stabilize = True
+  Bubbles = False
+  Lumped Mass Matrix = False
   Optimize Bandwidth = True
   Steady State Convergence Tolerance = 1.0e-5
   Nonlinear System Convergence Tolerance = 1.0e-7
@@ -86,12 +87,16 @@ Solver 2
   Linear System Precondition Recompute = 1
 End
 
-Solver 1
+
+
+Solver 2
   Equation = Helmholtz Equation
   Procedure = "HelmholtzSolve" "HelmholtzSolver"
   Variable = -dofs 2 Pressure Wave
   Exec Solver = Always
   Stabilize = True
+  Bubbles = False
+  Lumped Mass Matrix = False
   Optimize Bandwidth = True
   Steady State Convergence Tolerance = 1.0e-5
   Nonlinear System Convergence Tolerance = 1.0e-7
@@ -102,8 +107,8 @@ Solver 1
   Linear System Solver = Iterative
   Linear System Iterative Method = BiCGStab
   Linear System Max Iterations = 500
-  Linear System Convergence Tolerance = 1.0e-10
-  BiCGstabl polynomial degree = 2
+  Linear System Convergence Tolerance = 1.0e-6
+  BiCGstabl polynomial degree = 6
   Linear System Preconditioning = ILU0
   Linear System ILUT Tolerance = 1.0e-3
   Linear System Abort Not Converged = False
@@ -111,13 +116,17 @@ Solver 1
   Linear System Precondition Recompute = 1
 End
 
+
+
 Equation 1
   Name = "Equation 1"
-  Active Solvers(1) = 2
+  Active Solvers(1) = 1
 End
+
 
 Equation 2
   Name = "Equation 2"
+  Angular Frequency = $ 2*pi
 $ a = 10e-2
 $ b = 5e-2
 $ omega=2*pi*0.5
@@ -126,35 +135,36 @@ $ c0 = 1497
 $ amp = 10
 $ x0 = 0.625
 $ y0 = 2.5
-  Angular Frequency = $ 2*pi
-  Active Solvers(1) = 1
+  Active Solvers(1) = 2
 End
+
+
 
 Material 1
   Name = "Material 1"
-  Heat Capacity = 2.0668e4
-  Specific Heat Ratio = 1.66666667
-  Heat Conductivity = 3.3419e5
   Emissivity = 0.6
+  Specific Heat Ratio = 1.66666667
   Density = 5.4801e-12
+  Heat Conductivity = 3.3419e5
+  Heat Capacity = 2.0668e4
 End
 
 Material 2
   Name = "Material 2"
   Density = 5.4801e-12
-  Heat Conductivity = 3.3419e5
   Specific Heat Ratio = 1.66666667
-  Emissivity = 0.7
+  Heat Conductivity = 3.3419e5
   Heat Capacity = 2.0668e4
+  Emissivity = 0.7
 End
 
 Material 3
   Name = "Material 3"
-  Heat Capacity = 2.0668e4
-  Emissivity = 0.8
-  Heat Conductivity = 3.3419e5
-  Density = 5.4801e-12
   Specific Heat Ratio = 1.6666667
+  Heat Conductivity = 3.3419e5
+  Emissivity = 0.8
+  Density = 5.4801e-12
+  Heat Capacity = 2.0668e4
 End
 
 Body Force 1
@@ -162,23 +172,46 @@ Body Force 1
   Heat Source = 3.356e24
 End
 
+
 Body Force 2
   Name = "BodyForce 2"
- Pressure Wave Source 1 = Variable "time, Coordinate"; Real MATC "0*sin(1.57*tx(0))*exp(-((tx(1)-0.625)*(tx(1)-0.625)+(tx(2)-2.5)*(tx(2)-2.5))/(100))"
+  Pressure Wave Source 1 = Variable "time, Coordinate"; Real MATC "0*sin(1.57*tx(0))*exp(-((tx(1)-0.625)*(tx(1)-0.625)+(tx(2)-2.5)*(tx(2)-2.5))/(100))"
   Pressure Wave Source 2 = Variable "time, Coordinate";Real MATC "0*sin(1.57*tx(0))*exp(-((tx(1)-0.625)*(tx(1)-0.625)+(tx(2)-2.5)*(tx(2)-2.5))/(100))"
-
 End
+
+
 
 Initial Condition 1
   Name = "InitialCondition 1"
   Temperature = 1620300
 End
 
+
+Initial Condition 2
+  Name = "InitialCondition 2"
+  Pressure Wave 2 = 0.1
+  Pressure Wave 1 = 0.1
+End
+
+
+
+
 Boundary Condition 1
-  Target Boundaries(1) = 1 
+  Target Boundaries(1) = 5 
   Name = "BoundaryCondition 1"
-  Radiation Boundary Open = True
   Radiation = Diffuse Gray
   Temperature = 5799.9
   Emissivity = 0.6
+  Heat Transfer Coefficient = 1
+   Radiation Target Body = 1
 End
+
+
+Boundary Condition 2
+  Target Boundaries(1) = 2 
+  Name = "BoundaryCondition 2"
+  Pressure Wave 1 = Variable "time, Coordinate"; Real MATC "100*sin(1.57*tx(0))*sin(6*tx(2))"
+  Pressure Wave 2 = Variable "time, Coordinate"; Real MATC "100*sin(1.57*tx(0))*sin(6*tx(2))"
+End
+
+
