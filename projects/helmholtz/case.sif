@@ -13,7 +13,7 @@ Simulation
   Steady State Max Iterations = 1
   Output Intervals = 1
   Timestepping Method = BDF
-  BDF Order = 1
+  BDF Order = 2
   Timestep intervals = 100
   Timestep Sizes = 5
   Solver Input File = case.sif
@@ -87,10 +87,58 @@ Solver 1
   Linear System Precondition Recompute = 1
 End
 
+
+
+Solver 2
+  Equation = Helmholtz Equation
+  Procedure = "HelmholtzSolve" "HelmholtzSolver"
+  Variable = -dofs 2 Pressure Wave
+  Exec Solver = Always
+  Stabilize = True
+  Bubbles = False
+  Lumped Mass Matrix = False
+  Optimize Bandwidth = True
+  Steady State Convergence Tolerance = 1.0e-5
+  Nonlinear System Convergence Tolerance = 1.0e-7
+  Nonlinear System Max Iterations = 20
+  Nonlinear System Newton After Iterations = 3
+  Nonlinear System Newton After Tolerance = 1.0e-3
+  Nonlinear System Relaxation Factor = 1
+  Linear System Solver = Iterative
+  Linear System Iterative Method = BiCGStab
+  Linear System Max Iterations = 500
+  Linear System Convergence Tolerance = 1.0e-6
+  BiCGstabl polynomial degree = 6
+  Linear System Preconditioning = ILU0
+  Linear System ILUT Tolerance = 1.0e-3
+  Linear System Abort Not Converged = False
+  Linear System Residual Output = 10
+  Linear System Precondition Recompute = 1
+End
+
+
+
 Equation 1
   Name = "Equation 1"
   Active Solvers(1) = 1
 End
+
+
+Equation 2
+  Name = "Equation 2"
+  Angular Frequency = $ 2*pi
+$ a = 10e-2
+$ b = 5e-2
+$ omega=2*pi*0.5
+$ kc = pi/a
+$ c0 = 1497
+$ amp = 10
+$ x0 = 0.625
+$ y0 = 2.5
+  Active Solvers(1) = 2
+End
+
+
 
 Material 1
   Name = "Material 1"
@@ -124,10 +172,29 @@ Body Force 1
   Heat Source = 3.356e24
 End
 
+
+Body Force 2
+  Name = "BodyForce 2"
+  Pressure Wave Source 1 = Variable "time, Coordinate"; Real MATC "0*sin(1.57*tx(0))*exp(-((tx(1)-0.625)*(tx(1)-0.625)+(tx(2)-2.5)*(tx(2)-2.5))/(100))"
+  Pressure Wave Source 2 = Variable "time, Coordinate";Real MATC "0*sin(1.57*tx(0))*exp(-((tx(1)-0.625)*(tx(1)-0.625)+(tx(2)-2.5)*(tx(2)-2.5))/(100))"
+End
+
+
+
 Initial Condition 1
   Name = "InitialCondition 1"
   Temperature = 1620300
 End
+
+
+Initial Condition 2
+  Name = "InitialCondition 2"
+  Pressure Wave 2 = 0.1
+  Pressure Wave 1 = 0.1
+End
+
+
+
 
 Boundary Condition 1
   Target Boundaries(1) = 5 
@@ -138,3 +205,13 @@ Boundary Condition 1
   Heat Transfer Coefficient = 1
    Radiation Target Body = 1
 End
+
+
+Boundary Condition 2
+  Target Boundaries(1) = 2 
+  Name = "BoundaryCondition 2"
+  Pressure Wave 1 = Variable "time, Coordinate"; Real MATC "100*sin(1.57*tx(0))*sin(6*tx(2))"
+  Pressure Wave 2 = Variable "time, Coordinate"; Real MATC "100*sin(1.57*tx(0))*sin(6*tx(2))"
+End
+
+
