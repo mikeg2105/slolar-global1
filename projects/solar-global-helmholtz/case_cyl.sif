@@ -1,0 +1,110 @@
+Header
+  CHECK KEYWORDS Warn
+  Mesh DB "." "."
+  Include Path ""
+  Results Directory ""
+End
+
+Simulation
+  Max Output Level = 5
+  Coordinate System = Cartesian
+  Coordinate Mapping(3) = 1 2 3
+  Simulation Type = Transient
+  Steady State Max Iterations = 1
+  Output Intervals = 1
+  Timestepping Method = BDF
+  BDF Order = 2
+  Timestep intervals = 500
+  Timestep Sizes = 0.05
+  Solver Input File = case.sif
+  Post File = case.vtu
+End
+
+Constants
+  Gravity(4) = 280 0 0
+  Stefan Boltzmann = 5.67e-08
+  Permittivity of Vacuum = 8.8542e-12
+  Boltzmann Constant = 1.3807e-23
+  Unit Charge = 1.602e-19
+End
+
+Body 1
+  Target Bodies(1) = 1
+  Name = "Body Property 1"
+  Equation = 1
+  Material = 1
+  Body Force = 1
+End
+
+Solver 1
+  Equation = Helmholtz Equation
+  Procedure = "HelmholtzSolve" "HelmholtzSolver"
+  Variable = -dofs 2 Pressure Wave
+  Exec Solver = Always
+  Stabilize = True
+  Bubbles = False
+  Lumped Mass Matrix = False
+  Optimize Bandwidth = True
+  Steady State Convergence Tolerance = 1.0e-5
+  Nonlinear System Convergence Tolerance = 1.0e-7
+  Nonlinear System Max Iterations = 20
+  Nonlinear System Newton After Iterations = 3
+  Nonlinear System Newton After Tolerance = 1.0e-3
+  Nonlinear System Relaxation Factor = 1
+  Linear System Solver = Iterative
+  Linear System Iterative Method = BiCGStab
+  Linear System Max Iterations = 500
+  Linear System Convergence Tolerance = 1.0e-6
+  BiCGstabl polynomial degree = 6
+  Linear System Preconditioning = ILU0
+  Linear System ILUT Tolerance = 1.0e-3
+  Linear System Abort Not Converged = False
+  Linear System Residual Output = 10
+  Linear System Precondition Recompute = 1
+End
+
+Equation 1
+  Name = "Equation 1"
+  Angular Frequency = $ 2*pi
+$ a = 10e-2
+$ b = 5e-2
+$ omega=2*pi*0.5
+$ kc = pi/a
+$ c0 = 1497
+$ amp = 10
+$ x0 = 0.625
+$ y0 = 2.5
+  Active Solvers(1) = 1
+End
+
+Material 1
+  Name = "Water (room temperature)"
+  Sound damping = 0.01
+  Density = 998.3
+  Heat Capacity = 4183.0
+  Heat expansion Coefficient = 0.207e-3
+  Sound speed = 1497.0
+  Relative Permittivity = 80.1
+  Heat Conductivity = 0.58
+  Viscosity = 1.002e-3
+  Relative Permittivity = 80.1
+End
+
+Body Force 1
+  Name = "BodyForce 1"
+  Pressure Wave Source 1 = Variable "time, Coordinate"; Real MATC "0*sin(1.57*tx(0))*exp(-((tx(1)-0.625)*(tx(1)-0.625)+(tx(2)-2.5)*(tx(2)-2.5))/(100))"
+  Pressure Wave Source 2 = Variable "time, Coordinate";Real MATC "0*sin(1.57*tx(0))*exp(-((tx(1)-0.625)*(tx(1)-0.625)+(tx(2)-2.5)*(tx(2)-2.5))/(100))"
+End
+
+Initial Condition 1
+  Name = "InitialCondition 1"
+  Pressure Wave 2 = 0.1
+  Pressure Wave 1 = 0.1
+End
+
+Boundary Condition 1
+  Target Boundaries(1) = 2 
+  Name = "BoundaryCondition 2"
+  Pressure Wave 1 = Variable "time, Coordinate"; Real MATC "100*sin(1.57*tx(0))*sin(16*tx(2))"
+  Pressure Wave 2 = Variable "time, Coordinate"; Real MATC "100*sin(1.57*tx(0))*sin(16*tx(2))"
+End
